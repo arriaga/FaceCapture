@@ -19,10 +19,10 @@ import UIKit
      public var timeout : Int = 180
      public var maxValidations : Int = 3
     
-      var aditionalConfigurationParameters : [ComponentCaptureParameter: Any] = [:]
+     public  var aditionalConfigurationParameters : [ComponentCaptureParameter: Any] = [:]
      public var tags : [String: String] = [:]
      public var messagesResource: String = ""
-    var sideView : CameraSideView = .front
+    public var sideView : CameraSideView = .front
      public var allowManualSideView: Bool = false
     
     enum ResponseType{
