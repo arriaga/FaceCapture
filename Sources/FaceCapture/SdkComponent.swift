@@ -22,7 +22,7 @@ import UIKit
      public  var aditionalConfigurationParameters : [ComponentCaptureParameter: Any] = [:]
      public var tags : [String: String] = [:]
      public var messagesResource: String = ""
-    public var sideView : CameraSideView = .front
+     public var sideView : CameraSideView = .front
      public var allowManualSideView: Bool = false
     
     enum ResponseType{
