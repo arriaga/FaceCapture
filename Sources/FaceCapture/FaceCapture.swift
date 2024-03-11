@@ -48,6 +48,9 @@ public class FaceCapture:  SdkComponent, CameraViewControllerDelegate  {
     //private var tasksToDo: Queue<TaskConfiguration> = Queue<TaskConfiguration>()
     
     public override init(viewController : UIViewController){
+        
+        print("iniiiiitt")
+        print(viewController)
         super.init(viewController: viewController)
         self.identifier = "ComponentCapture"
         self.allowManualSideView = false
