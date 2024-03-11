@@ -13,7 +13,7 @@
         <!--Component Capture View Controller-->
         <scene sceneID="zeG-cU-LmO">
             <objects>
-                <viewController storyboardIdentifier="FaceCaptureViewController" id="3Ek-Nx-o7L" customClass="ComponentCaptureViewController" customModule="NubariumSDK" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FaceCaptureViewController" id="3Ek-Nx-o7L" customClass="ComponentCaptureViewController" customModule="FaceCapture" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="t09-lL-cmj">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -33,7 +33,7 @@
         <!--Confirmar-->
         <scene sceneID="bxq-st-RKY">
             <objects>
-                <viewController storyboardIdentifier="PreviewFaceViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="5wx-Bp-zsu" customClass="PreviewFaceViewController" customModule="NubariumSDK" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PreviewFaceViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="5wx-Bp-zsu" customClass="PreviewFaceViewController" customModule="FaceCapture" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Zcd-l5-ZZG">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
