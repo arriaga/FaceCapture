@@ -1,66 +1,68 @@
 //
-//  FaceCapture.swift
+//  IdCapture.swift
 //  NubariumSDK
 //
-//  Created by Amilcar Flores on 30/01/23.
-//  Copyright © 2023 Nuabrium SA de CV. All rights reserved.
+//  Created by Amilcar Flores on 15/02/23.
+//  Copyright © 2023 Google Inc. All rights reserved.
 //
+
 import UIKit
 import Device
 import AVFoundation
 
-public class FaceCapture:  SdkComponent, CameraViewControllerDelegate  {
+public class IdCapture:  SdkComponent, CameraViewControllerDelegate  {
+    func updateStatus(status: ComponentStatus) {
+        
+    }
+    
+    func getStatus() -> ComponentStatus {
+        return ComponentStatus.started
+    }
+    
+    func respond(response: Any,component : SDKComponent) {
+        self.idCaptureResponse = (response as? IdCaptureResponse)!
+       
+    }
     
     // View Controller Reference
     private var requestId: String = ""
     
     private var identifier : String = ""
-    private var allow : [FaceCaptureFeature] = []
-    private var deny : [FaceCaptureFeature] = []
-    private var order : [FaceCaptureFeature] = []
+    private var allow : [IdCaptureFeature] = []
+    private var deny : [IdCaptureFeature] = []
+    private var order : [IdCaptureFeature] = []
 
-    private var faceCaptureResponse: FaceCaptureResponse = FaceCaptureResponse()
-    private var faceCaptureReasonFail: FaceCaptureReasonFail?
-    private var reasonFail: String = ""
-    private var faceCaptureReasonError: FaceCaptureReasonError?
+    private var idCaptureResponse: IdCaptureResponse = IdCaptureResponse()
+    private var reasonFail: IdCaptureReasonFail?
+    private var failMessage: String = ""
+    private var error: IdCaptureError?
     private var errorMessage: String = ""
     private var started: Bool = false
     private var position: AVCaptureDevice.Position = .front
     
-    private var status: ComponentStatus = .created
-    private var tasks: [Task] = []
     
+    // Public properties, exposed and customizables
+      
     var allowCaptureOnFail : Bool = false
+   
     
     // Public event listeners
-    var onSuccess: ((_: FaceCaptureResult, _: UIImage, _: UIImage, _: UIImage )->Void)?
-    var onFail: ((_: FaceCaptureResult, _: FaceCaptureReasonFail, _: String )->Void)?
-    var onError: ((_: FaceCaptureReasonError, _: String)->Void)?
+    var onSuccess: ((_: IdCaptureResult, _: UIImage, _: UIImage )->Void)?
+    var onFail: ((_: IdCaptureResult, _: IdCaptureReasonFail, _: String )->Void)?
+    var onError: ((_: IdCaptureError, _: String)->Void)?
     // Public initialize events
     var onLoad: ((_: String)->Void)?
-    var onInitError: ((_: FaceCaptureInitError, _: String)->Void)?
+    var onInitError: ((_: IdCaptureInitError, _: String)->Void)?
     
     // Custom validator
-    private var customValidator: ((_: FaceCapturePreview)->Void)?
+    private var customValidator: ((_: IdCapturePreview)->Void)?
     private func throwResponse(responseType: ResponseEventType){
     }
     
-    //private var tasksToDo: Queue<TaskConfiguration> = Queue<TaskConfiguration>()
-    
-    public override init(viewController : UIViewController){
+    override init(viewController : UIViewController){
         super.init(viewController: viewController)
         self.identifier = "ComponentCapture"
         self.allowManualSideView = false
-        
-        //print("self.configuration", self.configuration)
-        
-        //var component
-        for line in self.configuration!.components{
-            if (line.type == .faceCapture) {
-                print("Tasks", line.tasks)
-                tasks = line.tasks
-            }
-        }
     }
     
     private func validateParameters(){
@@ -151,7 +153,7 @@ public class FaceCapture:  SdkComponent, CameraViewControllerDelegate  {
     private func validateRequest(){
         let dInfo = UIDevice.deviceInfo
         let version = ComponentInfo.version.description
-        print("dInfo", dInfo)
+        //print("dInfo", dInfo)
         //let _info = ["ios": dInfo]
         let apiRequest = ServiceSdk.validateToken(token: requestId, device: dInfo["id"] as! String, force_request: true, component: "bf", version: version)
         apiRequest.start()
@@ -167,12 +169,8 @@ public class FaceCapture:  SdkComponent, CameraViewControllerDelegate  {
                     if(data.message == "userDisabled"){
                         self.onInitError!(.userDisabled, "User account ("  + self.username + ") disabled.")
                     }else{
-                        if(data.message == "invalid_device" || data.message == "invalidDevice"){
-                            self.authAndCreateRequest()
-                        }else{
-                            // Falta homologar server y cliente
-                            self.onInitError!(.unknown, data.message)
-                        }
+                        // Falta homologar server y cliente
+                        self.onInitError!(.unknown, data.message)
                     }
                 }
             }
@@ -208,16 +206,15 @@ public class FaceCapture:  SdkComponent, CameraViewControllerDelegate  {
                     if(data.message == "userDisabled"){
                         self.onInitError!(.userDisabled, "User account ("  + self.username + ") disabled.")
                     }else{
-
-                            // Falta homologar server y cliente
-                            self.onInitError!(.unknown, data.message!)
+                        // Falta homologar server y cliente
+                        self.onInitError!(.unknown, data.message!)
                     }
                 }
             }
         }
         apiRequest.onFailure { error in
             if error.httpStatusCode == 401 || error.httpStatusCode == 403 {
-                self.onInitError!(.badCredentials, FaceCaptureInitError.badCredentials.description)
+                self.onInitError!(.badCredentials, IdCaptureInitError.badCredentials.description)
             }else{
                 self.onInitError!(.invalidStatusCode, String(error.httpStatusCode!))
             }
@@ -228,9 +225,6 @@ public class FaceCapture:  SdkComponent, CameraViewControllerDelegate  {
     //##### Public ####
     
     func initialize(){
-        
-        updateStatus(status: ComponentStatus.initialized)
-        
         // Use the latest credentials
         ServiceSdk.logIn(username: username, password: password)
         
@@ -238,7 +232,7 @@ public class FaceCapture:  SdkComponent, CameraViewControllerDelegate  {
         
         // Create for recover request
         let id = recoverRequestId()
-        print("ID Recovered", id)
+        print("id recovered", id)
         if(id == ""){
             authAndCreateRequest()
         }else{
@@ -252,15 +246,37 @@ public class FaceCapture:  SdkComponent, CameraViewControllerDelegate  {
         self.password = password
     }
     
-    func policyRules(allow: [FaceCaptureFeature], deny: [FaceCaptureFeature], order: [FaceCaptureFeature]) {
+    func policyRules(allow: [IdCaptureFeature], deny: [IdCaptureFeature], order: [IdCaptureFeature]) {
         self.allow = allow
         self.deny = deny
         self.order = order
     }
     
-    func prepare(segue:UIStoryboardSegue){
-        if (segue.identifier == "ComponentCapture" && self.status == ComponentStatus.started) {
-            var faceCaptureOptions = FaceCaptureOptions()
+    func start(){
+        self.started = true
+        (self.viewController).performSegue(withIdentifier: identifier, sender: self.viewController)
+    }
+    
+    func process(){
+        if(started && idCaptureResponse.responseEventType != .undefined){
+            let result = idCaptureResponse.result
+            switch idCaptureResponse.responseEventType{
+            case .success:
+                print("Exito")
+                self.onSuccess!(result,idCaptureResponse.front, idCaptureResponse.back)
+            case .fail:
+                self.onFail!(result, idCaptureResponse.reasonFail!, idCaptureResponse.failMessage)
+            case .error:
+                self.onError!(idCaptureResponse.error!, errorMessage)
+            case .undefined:
+                break
+            }
+        }
+    }
+    
+    func prepare(segue:UIStoryboardSegue, identifier: String){
+        if segue.identifier == identifier {
+            var faceCaptureOptions = IdCaptureOptions()
             faceCaptureOptions.id = requestId
             faceCaptureOptions.showPreview = showPreview
             faceCaptureOptions.livenessRequired = livenessRequired
@@ -271,7 +287,7 @@ public class FaceCapture:  SdkComponent, CameraViewControllerDelegate  {
             faceCaptureOptions.showIntro = showIntro
             faceCaptureOptions.allowCaptureOnFail = allowCaptureOnFail
             faceCaptureOptions.timeout = timeout
-            //faceCaptureOptions.level = level
+            faceCaptureOptions.level = level
             faceCaptureOptions.aditionalConfigurationParameters = aditionalConfigurationParameters
             faceCaptureOptions.enableVideoHelp = enableVideoHelp
             faceCaptureOptions.enableTroubleshootHelp = enableTroubleshootHelp
@@ -281,81 +297,38 @@ public class FaceCapture:  SdkComponent, CameraViewControllerDelegate  {
             
             // telling the compiler what type of VC the sugue.destination is
             let destinationVC = segue.destination as! ComponentCaptureViewController
-            destinationVC.faceCaptureOptions = faceCaptureOptions
-            destinationVC.loadTasks(tasks: tasks)
+            destinationVC.idCaptureOptions = faceCaptureOptions
             destinationVC.requestId = self.requestId
-            destinationVC.sdkComponent = (self as SdkComponent)
             destinationVC.delegate = self
         }
     }
-    
-    public func start(){
-        self.started = true
-        self.status = ComponentStatus.started
-        (self.viewController).performSegue(withIdentifier: identifier, sender: self.viewController)
-    }
-    
-    public func process(){
-        if(started && faceCaptureResponse.responseEventType != .undefined){
-            let result = faceCaptureResponse.faceCaptureResult
-            switch faceCaptureResponse.responseEventType{
-            case .success:
-                print("Exito")
-                self.onSuccess!(result,faceCaptureResponse.face, faceCaptureResponse.area, faceCaptureResponse.frame)
-            case .fail:
-                self.onFail!(result, faceCaptureResponse.faceCaptureReasonFail!, reasonFail)
-            case .error:
-                self.onError!(faceCaptureResponse.faceCaptureReasonError!, errorMessage)
-            case .undefined:
-                break
-            }
-        }
-    }
-
-    /*    */
-     func updateStatus(status: ComponentStatus) {
-        self.status = status
-    }
-    
-     func getStatus() -> ComponentStatus {
-        return self.status
-    }
-    
-     func respond(response: Any, component : SDKComponent) {
-        print("Tarantino")
-        self.faceCaptureResponse = (response as? FaceCaptureResponse)!
-        //responseType = faceCaptureResponse.faceCaptureResponseEventType
-        print("result", self.faceCaptureResponse.faceCaptureResult.result)
-    }
-    
 }
 
-struct FaceCaptureResponse{
-    var frame: UIImage =  UIImage()
-    var face: UIImage =  UIImage()
-    var area: UIImage =  UIImage()
-    var faceCaptureResult = FaceCaptureResult()
-    var faceCaptureReasonFail: FaceCaptureReasonFail?
-    var reasonFail = ""
-    var faceCaptureReasonError: FaceCaptureReasonError?
+struct IdCaptureResponse{
+    var front: UIImage =  UIImage()
+    var back: UIImage =  UIImage()
+    var result = IdCaptureResult()
+    var reasonFail: IdCaptureReasonFail?
+    var failMessage = ""
+    var error: IdCaptureError?
     var errorMessage = ""
     var responseEventType: ResponseEventType = .undefined
 }
 
-struct FaceCapturePreview{
+struct IdCapturePreview{
     var frame: UIImage =  UIImage()
-    var face: UIImage =  UIImage()
+    var document: UIImage = UIImage()
     var area: UIImage =  UIImage()
-    var faceCaptureResult = FaceCaptureResult()
+    var idCaptureResult = IdCaptureResult()
 }
 
-struct FaceCaptureResult{
+struct IdCaptureResult{
     var result:String = "unevaluated"
     var confidence : Double = 0.0
     var retro: [String] = []
 }
 
-struct FaceCaptureOptions{
+struct IdCaptureOptions{
     var id: String = ""
     var livenessRequired: Bool = true
     var level: AntispoofingLevel = .medium
@@ -368,16 +341,15 @@ struct FaceCaptureOptions{
     var allowCaptureOnFail : Bool = false
     var sideView : CameraSideView = .front
     var allowManualSideView = false
-    var allow: [FaceCaptureFeature] = []
-    var deny: [FaceCaptureFeature] = [.glasses, .facemask]
-    var order: [FaceCaptureFeature] = []
+    var allow: [IdCaptureFeature] = []
+    var deny: [IdCaptureFeature] = [.glasses, .facemask]
+    var order: [IdCaptureFeature] = []
     var aditionalConfigurationParameters: [ComponentCaptureParameter: Any] = [:]
     
     var messagesResource: String = ""
-    var tasks: [Task] = []
 }
 
-enum ComponentCaptureParameter{
+enum IdCaptureParameter{
     case helpVideoUrl,
          troubleshootUrl,
          showTroubleshootAfterFail,
