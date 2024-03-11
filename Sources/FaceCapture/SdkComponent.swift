@@ -8,22 +8,22 @@ import UIKit
     internal var viewController : UIViewController
     internal var configuration: Configuration?
     
-    var username: String = ""
-    var password: String = ""
-    var livenessRequired: Bool = true
-    var level: AntispoofingLevel = .medium
-    var showPreview: Bool = false
-    var showIntro: Bool = true
-    var enableVideoHelp: Bool = false
-    var enableTroubleshootHelp: Bool = false
-    var timeout : Int = 180
-    var maxValidations : Int = 3
+   public var username: String = ""
+     public var password: String = ""
+     public var livenessRequired: Bool = true
+     public var level: AntispoofingLevel = .medium
+     public var showPreview: Bool = false
+     public var showIntro: Bool = true
+     public var enableVideoHelp: Bool = false
+     public var enableTroubleshootHelp: Bool = false
+     public var timeout : Int = 180
+     public var maxValidations : Int = 3
     
-    var aditionalConfigurationParameters : [ComponentCaptureParameter: Any] = [:]
-    var tags : [String: String] = [:]
-    var messagesResource: String = ""
+      var aditionalConfigurationParameters : [ComponentCaptureParameter: Any] = [:]
+     public var tags : [String: String] = [:]
+     public var messagesResource: String = ""
     var sideView : CameraSideView = .front
-    var allowManualSideView: Bool = false
+     public var allowManualSideView: Bool = false
     
     enum ResponseType{
         case success, fail, error
