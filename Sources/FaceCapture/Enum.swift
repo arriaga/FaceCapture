@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum CameraSideView{
+public enum CameraSideView{
     case front,
          back,
          frontElseBack,
@@ -17,6 +17,6 @@ enum CameraSideView{
          backOrFront
 }
 
-enum StatusRequest{
+public enum StatusRequest{
     case notStarted, started, failed, completed
 }

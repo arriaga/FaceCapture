@@ -30,7 +30,7 @@ public class FaceCapture:  SdkComponent, CameraViewControllerDelegate  {
     private var status: ComponentStatus = .created
     private var tasks: [Task] = []
     
-    var allowCaptureOnFail : Bool = false
+    public var allowCaptureOnFail : Bool = false
     
     // Public event listeners
     public var onSuccess: ((_: FaceCaptureResult, _: UIImage, _: UIImage, _: UIImage )->Void)?
@@ -252,7 +252,7 @@ public class FaceCapture:  SdkComponent, CameraViewControllerDelegate  {
         self.password = password
     }
     
-    func policyRules(allow: [FaceCaptureFeature], deny: [FaceCaptureFeature], order: [FaceCaptureFeature]) {
+    public func policyRules(allow: [FaceCaptureFeature], deny: [FaceCaptureFeature], order: [FaceCaptureFeature]) {
         self.allow = allow
         self.deny = deny
         self.order = order
@@ -350,9 +350,9 @@ public struct FaceCapturePreview{
 }
 
 public struct FaceCaptureResult{
-    var result:String = "unevaluated"
-    var confidence : Double = 0.0
-    var retro: [String] = []
+    public var result:String = "unevaluated"
+    public var confidence : Double = 0.0
+    public var retro: [String] = []
 }
 
 public struct FaceCaptureOptions{
@@ -366,18 +366,18 @@ public struct FaceCaptureOptions{
     var timeout : Int = 60
     var maxValidations : Int = 3
     var allowCaptureOnFail : Bool = false
-    var sideView : CameraSideView = .front
+    public var sideView : CameraSideView = .front
     var allowManualSideView = false
     var allow: [FaceCaptureFeature] = []
     var deny: [FaceCaptureFeature] = [.glasses, .facemask]
     var order: [FaceCaptureFeature] = []
-    var aditionalConfigurationParameters: [ComponentCaptureParameter: Any] = [:]
+    public var aditionalConfigurationParameters: [ComponentCaptureParameter: Any] = [:]
     
     var messagesResource: String = ""
     var tasks: [Task] = []
 }
 
-enum ComponentCaptureParameter{
+public enum ComponentCaptureParameter{
     case helpVideoUrl,
          troubleshootUrl,
          showTroubleshootAfterFail,
