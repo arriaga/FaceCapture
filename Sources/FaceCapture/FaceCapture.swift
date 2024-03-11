@@ -12,20 +12,20 @@ import AVFoundation
 public class FaceCapture:  SdkComponent, CameraViewControllerDelegate  {
     
     // View Controller Reference
-    private var requestId: String = ""
+    public var requestId: String = ""
     
-    private var identifier : String = ""
-    private var allow : [FaceCaptureFeature] = []
-    private var deny : [FaceCaptureFeature] = []
-    private var order : [FaceCaptureFeature] = []
+    public var identifier : String = ""
+    public var allow : [FaceCaptureFeature] = []
+    public var deny : [FaceCaptureFeature] = []
+    public var order : [FaceCaptureFeature] = []
 
-    private var faceCaptureResponse: FaceCaptureResponse = FaceCaptureResponse()
-    private var faceCaptureReasonFail: FaceCaptureReasonFail?
-    private var reasonFail: String = ""
-    private var faceCaptureReasonError: FaceCaptureReasonError?
-    private var errorMessage: String = ""
-    private var started: Bool = false
-    private var position: AVCaptureDevice.Position = .front
+    public var faceCaptureResponse: FaceCaptureResponse = FaceCaptureResponse()
+    public var faceCaptureReasonFail: FaceCaptureReasonFail?
+    public var reasonFail: String = ""
+    public var faceCaptureReasonError: FaceCaptureReasonError?
+    public var errorMessage: String = ""
+    public var started: Bool = false
+    public var position: AVCaptureDevice.Position = .front
     
     private var status: ComponentStatus = .created
     private var tasks: [Task] = []
@@ -33,12 +33,12 @@ public class FaceCapture:  SdkComponent, CameraViewControllerDelegate  {
     var allowCaptureOnFail : Bool = false
     
     // Public event listeners
-    var onSuccess: ((_: FaceCaptureResult, _: UIImage, _: UIImage, _: UIImage )->Void)?
-    var onFail: ((_: FaceCaptureResult, _: FaceCaptureReasonFail, _: String )->Void)?
-    var onError: ((_: FaceCaptureReasonError, _: String)->Void)?
+    public var onSuccess: ((_: FaceCaptureResult, _: UIImage, _: UIImage, _: UIImage )->Void)?
+    public var onFail: ((_: FaceCaptureResult, _: FaceCaptureReasonFail, _: String )->Void)?
+    public var onError: ((_: FaceCaptureReasonError, _: String)->Void)?
     // Public initialize events
-    var onLoad: ((_: String)->Void)?
-    var onInitError: ((_: FaceCaptureInitError, _: String)->Void)?
+    public var onLoad: ((_: String)->Void)?
+    public var onInitError: ((_: FaceCaptureInitError, _: String)->Void)?
     
     // Custom validator
     private var customValidator: ((_: FaceCapturePreview)->Void)?
@@ -330,7 +330,7 @@ public class FaceCapture:  SdkComponent, CameraViewControllerDelegate  {
     
 }
 
-struct FaceCaptureResponse{
+public struct FaceCaptureResponse{
     var frame: UIImage =  UIImage()
     var face: UIImage =  UIImage()
     var area: UIImage =  UIImage()
@@ -342,20 +342,20 @@ struct FaceCaptureResponse{
     var responseEventType: ResponseEventType = .undefined
 }
 
-struct FaceCapturePreview{
+public struct FaceCapturePreview{
     var frame: UIImage =  UIImage()
     var face: UIImage =  UIImage()
     var area: UIImage =  UIImage()
     var faceCaptureResult = FaceCaptureResult()
 }
 
-struct FaceCaptureResult{
+public struct FaceCaptureResult{
     var result:String = "unevaluated"
     var confidence : Double = 0.0
     var retro: [String] = []
 }
 
-struct FaceCaptureOptions{
+public struct FaceCaptureOptions{
     var id: String = ""
     var livenessRequired: Bool = true
     var level: AntispoofingLevel = .medium
