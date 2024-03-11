@@ -259,6 +259,9 @@ public class FaceCapture:  SdkComponent, CameraViewControllerDelegate  {
     }
     
     public func prepare(segue:UIStoryboardSegue){
+        
+        print("prepareprepareprepare")
+        print(segue.identifier)
         if (segue.identifier == "ComponentCapture" && self.status == ComponentStatus.started) {
             var faceCaptureOptions = FaceCaptureOptions()
             faceCaptureOptions.id = requestId
