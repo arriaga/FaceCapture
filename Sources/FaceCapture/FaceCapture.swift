@@ -227,7 +227,7 @@ public class FaceCapture:  SdkComponent, CameraViewControllerDelegate  {
 
     //##### Public ####
     
-    func initialize(){
+    public func initialize(){
         
         updateStatus(status: ComponentStatus.initialized)
         
@@ -247,7 +247,7 @@ public class FaceCapture:  SdkComponent, CameraViewControllerDelegate  {
     }
     
     // Initialize credentials
-    func credentials(username: String, password: String) {
+    public func credentials(username: String, password: String) {
         self.username = username
         self.password = password
     }
@@ -258,7 +258,7 @@ public class FaceCapture:  SdkComponent, CameraViewControllerDelegate  {
         self.order = order
     }
     
-    func prepare(segue:UIStoryboardSegue){
+    public func prepare(segue:UIStoryboardSegue){
         if (segue.identifier == "ComponentCapture" && self.status == ComponentStatus.started) {
             var faceCaptureOptions = FaceCaptureOptions()
             faceCaptureOptions.id = requestId
