@@ -14,7 +14,7 @@ import QuartzCore
 import CoreMedia
 import Vision
 
-class ComponentCaptureViewController: CommonCaptureViewController {
+public class ComponentCaptureViewController: CommonCaptureViewController {
     
     // Face elements
     var faceCaptureOptions : FaceCaptureOptions = FaceCaptureOptions()

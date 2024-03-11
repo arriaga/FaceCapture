@@ -13,7 +13,7 @@ import QuartzCore
 import CoreMedia
 import Vision
 
-class CommonCaptureViewController: CameraViewController, PreviewFaceViewControllerDelegate, PreviewIdViewControllerDelegate {
+public class CommonCaptureViewController: CameraViewController, PreviewFaceViewControllerDelegate, PreviewIdViewControllerDelegate {
     
     var delegate : CameraViewControllerDelegate?
     
